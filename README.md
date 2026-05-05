@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=banner">
-  <img src="images/banner.png" alt="PINGEQUA RF Lab — 2.4 GHz spectrum analyzer and NRF24 jammer for Flipper Zero" width="100%" />
+  <img src="images/hardware_devboard.jpg" alt="PINGEQUA 2-in-1 RF Devboard — nRF24L01+ + CC1101 with antennas" width="55%" />
 </a>
 
 # PINGEQUA RF Lab
@@ -27,9 +27,12 @@
 
 An open-source Flipper Application Package (FAP) that turns Flipper Zero plus the PINGEQUA 2-in-1 RF Devboard into:
 
-- **2.4 GHz spectrum analyzer** — 126 channels, real-time, with WiFi 1/6/11 and BLE 37/38/39 band markers, max-hold mode, microsecond dwell tuning, cursor inspection
-- **NRF24 jammer** (v0.3.0+) — CW (constant wave at any channel 0–125) and Sweep (full-band hop) modes
-- **Plug-and-play across firmware** — Momentum, Unleashed, RogueMaster, and Official Flipper firmware. No firmware-specific patching.
+- **2.4 GHz spectrum analyzer** — 126 channels real-time with WiFi 1/6/11 + BLE 37/38/39 band markers, max-hold, microsecond dwell tuning, cursor inspection, **CSV scan export** (long-press OK, v0.5.0+)
+- **NRF24 jammer with 7 modes** (v0.4.0+):
+  - CW Custom · BLE Adv · **BLE React** (RPD reactive — first on Flipper NRF24) · WiFi 1/6/11 (pilot-aware OFDM) · ALL 2.4G
+  - Real-device verified to disconnect BLE devices and 2.4 GHz WiFi within room range
+  - **Auto session log** + **mode/channel persistence** (v0.5.0+)
+- **Plug-and-play across firmware** — Momentum, Unleashed, RogueMaster, Xtreme, and Official Flipper firmware. No firmware-specific patching.
 - **Clean exit** — other Flipper apps (Sub-GHz Read, NFC, Bad-USB) keep working perfectly after you exit
 
 ---
@@ -45,30 +48,34 @@ An open-source Flipper Application Package (FAP) that turns Flipper Zero plus th
 | WiFi 1/6/11 + BLE 37/38/39 frequency markers | ✅ | ❌ |
 | Adjustable dwell time (130–2000 µs) | ✅ | ⚠️ Usually fixed |
 | Cursor channel inspection with live readout | ✅ | ❌ Rare |
-| NRF24 jammer included (CW + Sweep) | ✅ | ❌ Typically separate app |
+| NRF24 jammer (7 modes incl. RPD reactive + WiFi pilot-aware) | ✅ | ❌ Usually CW only, separate app |
+| RPD-driven reactive BLE jamming | ✅ | ❌ |
+| WiFi pilot-aware OFDM jamming (Clancy 2011) | ✅ | ❌ |
+| CSV scan export for analysis | ✅ | ❌ |
 | Continuous active development | ✅ | ⚠️ Often abandoned |
-| Compact FAP size | ✅ 28 KB | varies |
+| Compact FAP size | ✅ 40 KB | varies |
 | Open source MIT license | ✅ | varies |
 
 ---
 
-## Screenshot
+## Screenshots
 
-```
-┌────────────────────────────────────────────────────────┐
-│ Ch042  2442 MHz                                  N1234 │
-│────────────────────────────────────────────────────────│
-│  ▲ ■    ▲   ▲                              ■           │
-│────────────────────────────────────────────────────────│
-│      ▼                                                 │
-│      ┊         ▌                                       │
-│      ┊       ▌▌▌                  ▌                    │
-│      ┊    ▌▌▌▌▌▌▌      ▌▌▌  ▌    ▌▌                    │
-│    ▌▌┊▌▌▌▌▌▌▌▌▌▌▌▌    ▌▌▌▌▌▌▌▌▌  ▌▌▌▌▌▌                │
-│────────────────────────────────────────────────────────│
-│ Pk37@28           Cur:5                    Dwl:150us   │
-└────────────────────────────────────────────────────────┘
-```
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="images/menu.png" alt="Main menu" width="240" /><br>
+      <sub><b>Main Menu</b><br>Channel Scanner / NRF24 Jammer</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/ChannelScanner.png" alt="Channel Scanner UI" width="240" /><br>
+      <sub><b>Channel Scanner</b><br>126-ch live RPD spectrum, max-hold</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/NRF24Jammer.png" alt="NRF24 Jammer BLE React mode" width="240" /><br>
+      <sub><b>NRF24 Jammer (BLE React)</b><br>RPD reactive on adv ch 37/38/39</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -116,6 +123,33 @@ Launch from `Apps → GPIO → PINGEQUA RF Lab`. Main menu offers **Scanner** or
 - Back returns to main menu — **session auto-logs** to `/ext/apps_data/pingequa/jammer/session_<ts>.csv` (mode, duration, chunks, reactive jam count) and **mode/channel persists** for next launch (v0.5.0+).
 - Real-device verified: BLE devices and 2.4G WiFi can be disconnected within room range.
 
+### Data Export (v0.5.0+)
+
+The app writes research-grade data to your Flipper SD card. Open with qFlipper, Excel, Numbers, or `pandas.read_csv` (skip `#` comment lines):
+
+```
+/ext/apps_data/pingequa/
+├── jammer.conf                      ← Last jammer mode + channel (auto-restored)
+├── scans/scan_<boot_ms>.csv         ← Long-press OK in Scanner exports here
+└── jammer/session_<start_ms>.csv    ← Each Jammer session auto-logs here
+```
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="images/qflipper_data_dir.png" alt="qFlipper showing /ext/apps_data/pingequa/" width="100%" /><br>
+      <sub>Data directory in qFlipper's file manager</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="images/qflipper_session_logs.png" alt="qFlipper showing accumulated jammer session CSVs" width="100%" /><br>
+      <sub>Each Back-from-Jammer creates one session CSV</sub>
+    </td>
+  </tr>
+</table>
+
+**Scanner CSV** contains all 126 channel hits, peak channel, dwell, sweep count.
+**Jammer session CSV** contains mode, duration, total chunks, and (for BLE React) reactive jam count.
+
 Detailed walkthroughs: [docs/QUICKSTART.md](docs/QUICKSTART.md), [docs/UI_GUIDE.md](docs/UI_GUIDE.md), [docs/USE_CASES.md](docs/USE_CASES.md).
 
 ---
@@ -147,10 +181,12 @@ Other NRF24 boards may partially work but are unsupported. See [docs/HARDWARE.md
 | Version | Status | Headline |
 |---|:---:|---|
 | v0.2.0 | ✅ | Channel scanner, max-hold, WiFi/BLE markers |
-| **v0.3.0** | ✅ | **NRF24 jammer (CW + Sweep), main menu** |
-| v0.4.0 | 🔜 next | Settings persistence, CSV scan export, jammer power UI |
-| v1.0.0 | planned | Polished release with About + QR error screen |
-| v1.2.x | planned | Jammer WiFi flood mode, custom channel lists |
+| v0.3.0 | ✅ | NRF24 jammer (CW + Sweep), main menu |
+| v0.4.0 | ✅ | RPD reactive BLE jam, WiFi pilot-aware OFDM, 7 jammer modes |
+| **v0.5.0** | ✅ | **CSV scan export, jammer session log, settings persistence** |
+| v0.6.x | 🔜 next | BLE protocol-aware (decode access address before jamming) |
+| v0.7.x | planned | Multi-waveform mixing, About scene, jam intensity UI |
+| v1.0.0 | planned | Polished release, multi-language UI (zh / en) |
 | v1.5.0 | planned | Companion mobile viewer over Bluetooth |
 | v2.0.0 | concept | Unified UI bridging NRF24 + CC1101 |
 
@@ -174,9 +210,7 @@ Other NRF24 boards may partially work but are unsupported. See [docs/HARDWARE.md
 
 ## Legal Notice
 
-PINGEQUA RF Lab v0.2.x is **passive listen only**.
-
-v0.3.0+ adds opt-in **transmit features (NRF24 Jammer)**. Active RF emission within the unlicensed 2.4 GHz band is regulated (FCC §15 in the US, ETSI EN 300 328 in the EU, equivalent elsewhere).
+PINGEQUA RF Lab includes opt-in **transmit features (NRF24 Jammer)** — the Channel Scanner is passive listen-only, but the 7 Jammer modes actively transmit on 2.4 GHz at up to +20 dBm. Active RF emission in the unlicensed 2.4 GHz band is regulated (FCC §15 in the US, ETSI EN 300 328 in the EU, equivalent elsewhere).
 
 You are responsible for compliance with your local regulations. Use only on hardware and networks you own or have authorization to test. The authors accept no liability for misuse.
 
